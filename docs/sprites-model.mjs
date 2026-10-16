@@ -146,6 +146,40 @@ export function reaction(previous, action) {
   if(action==='pass')return {phase:'clear',emoji:'',label:'Deliberate no-text pass · pending marker removed; no success/failure marker added',delivered:false};
   return previous; // A progress edit, summary, or inbox ACK cannot assert completion.
 }
+export function initialWorkbench(){return {question:'empty',job:'empty',jobOutput:'No job output yet.',draft:'empty',replacement:false,command:'hello',runs:0,output:'No simulated output yet.',mode:'!',followup:true,delivery:'No output sent to model context.',topic:'Untitled session',topicChanged:true,topicCalls:0,elapsed:300,notice:'Choose a question, draft, or label to explore. Everything here is simulated.'};}
+export function workbench(previous,action,value){
+  const s={...previous};
+  if(action==='reset')return initialWorkbench();
+  if(action==='queue'){s.question='queued';s.notice='Optional question queued. Work can continue without an answer.';}
+  if(action==='answer'&&s.question==='queued'){s.question='answered';s.notice='Answer attached to this session branch; it can steer the current turn.';}
+  if(action==='clear'){s.question='empty';s.notice='Question removed; this grants no new permission.';}
+  if(action==='consent')s.notice='Required consent cannot be queued as optional. Ask directly before spending or destructive work.';
+  if(action==='propose'){if(s.draft==='ready'){s.replacement=true;s.notice='An unsent draft exists. Confirm replacement or keep it; neither runs a command.';}else{s.draft='ready';s.notice='Draft ready for inspection. Only explicit submission produces simulated output.';}}
+  if(action==='replace'&&s.replacement){s.command=s.command==='hello'?'goodbye':'hello';s.replacement=false;s.notice='Unsent draft replaced after confirmation. No command ran.';}
+  if(action==='keep'){s.replacement=false;s.notice='Original draft kept. No command ran.';}
+  if(action==='mode'&&(value==='!'||value==='!!'))s.mode=value;
+  if(action==='followup')s.followup=Boolean(value);
+  if(action==='submit'){
+    if(s.draft!=='ready'||s.replacement)s.notice='Inspect a draft and resolve replacement before submitting.';
+    else{s.runs++;s.draft='submitted';s.output=`${s.command} from a synthetic example`;
+      s.delivery=s.mode==='!!'?'Output withheld from model context; no automatic follow-up.':s.followup?'Output enters model context; automatic follow-up is eligible.':'Output enters model context; automatic follow-up is paused.';
+      s.notice='Submission simulated. This browser executed nothing; the output below is a fixed illustration.';}
+  }
+  if(action==='job-queue'&&['empty','completed','failed','cancelled'].includes(s.job)){s.job='queued';s.jobOutput='Waiting for a worker slot.';s.notice='Example job queued; no real process started.';}
+  if(action==='job-start'&&s.job==='queued'){s.job='running';s.jobOutput='Checking sample notes…';s.notice='Simulated worker started. The session remains available.';}
+  if(action==='job-complete'&&s.job==='running'){s.job='completed';s.jobOutput='Checked 3 sample notes. Exit 0 (simulated).';s.notice='Job completed. Inspect its output before treating the task as verified.';}
+  if(action==='job-fail'&&s.job==='running'){s.job='failed';s.jobOutput='Sample input unavailable. Exit 1 (simulated).';s.notice='Job failed; output preserves the failure instead of reporting success.';}
+  if(action==='job-cancel'&&['queued','running'].includes(s.job)){s.job='cancelled';s.jobOutput='Cancelled by user in this demonstration.';s.notice='Only this simulated job was cancelled.';}
+  if(action==='context'){s.topicChanged=true;s.notice='New bounded example activity is available for a label.';}
+  if(action==='time')s.elapsed+=300;
+  if(action==='label'){
+    if(!s.topicChanged)s.notice='No changed activity: no naming call needed.';
+    else if(s.elapsed<300)s.notice='Refresh is limited to once per five minutes; no naming call yet.';
+    else{s.topicCalls++;s.topic=s.topicCalls===1?'Workspace notes':'Workspace notes · follow-up';s.topicChanged=false;s.elapsed=0;s.notice='Label refreshed from the bounded redacted example only. No model call or credits used here.';}
+  }
+  return s;
+}
+
 export function fixEligibility(gates) {
   const required = ['reviewed', 'agent', 'skill', 'digest'];
   const missing = required.filter(key => !gates[key]);

@@ -50,6 +50,10 @@ export const chapters = [
       [
         "Owner-side bridge probe",
         "The recent bridge health checker is read-only. Local readiness means startup, not proven upstream delivery. It is not wired to an automatic Supervisor restart loop."
+      ],
+      [
+        "Source is not rollout",
+        "Source changes, installed packages, and running services are separate states. Each owner verifies installation and deployment; a merge does not grant permission to restart or publish."
       ]
     ],
     "quiz": "What does a successful Supervisor restart establish?",
@@ -439,12 +443,12 @@ export const chapters = [
   {
     "id": "workbench",
     "nav": "A quieter workbench",
-    "kicker": "Questions · shell drafts · topic labels",
+    "kicker": "Queued menus · shell drafts · jobs · topic labels",
     "title": "Keep the loose ends\nclose to the work.",
     "lead": "Companion extensions hold optional questions, make shell drafts easy to inspect, and give sessions readable topic labels. They help people and agents keep track of a conversation without turning every loose end into an interruption.",
     "lab": "From a suggestion to a decision",
     "type": "workbench",
-    "prompt": "Queue an optional question, inspect a shell draft, and simulate submitting it. Notice the separate step between seeing a proposal and choosing to run it.",
+    "prompt": "Open the Questions, Shell suggestions, and Background jobs menus. Queue an item, inspect it, and choose what happens next. Refresh the session topic separately and test its five-minute limit.",
     "idea": [
       "Each tool has a small job.",
       "Questions persist on the session branch and their answers can steer a turn. A shell proposal remains a draft until the user submits the native ! command. Topic labels help people find the right working context."
@@ -566,37 +570,6 @@ export const chapters = [
       "Yes, once the bridge saw it.",
       "No. Admission, Pi handling, and final delivery each have their own outcome.",
       "Only if a progress card appeared."
-    ],
-    "answer": 1
-  },
-  {
-    "id": "recent",
-    "nav": "Independent release layers",
-    "kicker": "Source · installation · deployment",
-    "title": "The environment evolves.\nCheck which layer changed.",
-    "lead": "Runtime, bridge, skills, and shared learning have independent release boundaries. This conceptual tour is not an inventory of a real installation.",
-    "lab": "Explore the release layers",
-    "type": "updates",
-    "prompt": "Select a layer and compare source, installation, and deployment.",
-    "idea": [
-      "Release is not rollout.",
-      "Changing shared source does not install it, deploy it, grant permissions, or authorize a restart. Each layer needs its own verification."
-    ],
-    "limit": [
-      "A public teaching edition.",
-      "All examples run locally in your browser. Monitoring publishes only approved combined tool counts and their date window, not individual agent activity. No household services are connected."
-    ],
-    "technical": [
-      [
-        "Guidance remains advisory",
-        "Command-plan policies restrict eligible advice and record delivery evidence. They do not execute commands or grant authority. Merging their implementation does not apply database migrations, publish policies, or enable a recipient."
-      ]
-    ],
-    "quiz": "Does merging a new shared skill install it everywhere?",
-    "choices": [
-      "Yes, and it grants the needed credentials.",
-      "No. Each owner installs, verifies prerequisites, and keeps authorization separate.",
-      "Only in Matrix rooms."
     ],
     "answer": 1
   }
